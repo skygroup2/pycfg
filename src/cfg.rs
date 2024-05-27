@@ -117,22 +117,22 @@ impl CFGEvm {
         }
     }
 
-    pub fn incoming_edges(&self, node: (u16, u16)) -> Vec<NodeEdge> {
+    pub fn incoming_edges(&self, node: (u16, u16)) -> PyResult<Vec<NodeEdge>> {
         let in_edges = self.cfg_dag.edges_directed(node, Direction::Incoming);
         let mut ret : Vec<NodeEdge> = vec![];
         for e in in_edges.into_iter() {
             ret.push(NodeEdge::new(e.0, e.1, e.2));
         }
-        return ret
+        return Ok(ret)
     }
 
-    pub fn outgoing_edges(&self, node: (u16, u16)) -> Vec<NodeEdge> {
+    pub fn outgoing_edges(&self, node: (u16, u16)) -> PyResult<Vec<NodeEdge>> {
         let in_edges = self.cfg_dag.edges_directed(node, Direction::Outgoing);
         let mut ret : Vec<NodeEdge> = vec![];
         for e in in_edges.into_iter() {
             ret.push(NodeEdge::new(e.0, e.1, e.2));
         }
-        return ret
+        return Ok(ret)
     }
 }
 
