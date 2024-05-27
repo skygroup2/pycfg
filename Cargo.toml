@@ -1,0 +1,17 @@
+[package]
+name = "pycfg"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+name = "pycfg"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = "0.21.2"
+#evm-cfg = {git = "https://github.com/skygroup2/evm-cfg.git", branch = "main"}
+evm-cfg = { path = "../evm-cfg" }
+hex = "0.4.3"
+revm = { version = "9.0.0"}
+fnv = "1.0.7"
