@@ -1203,6 +1203,7 @@ dependencies = [
  "evm-cfg",
  "fnv",
  "hex",
+ "petgraph",
  "pyo3",
  "revm",
 ]

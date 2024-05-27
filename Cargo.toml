@@ -12,6 +12,7 @@ crate-type = ["cdylib"]
 pyo3 = "0.21.2"
 #evm-cfg = {git = "https://github.com/skygroup2/evm-cfg.git", branch = "main"}
 evm-cfg = { path = "../evm-cfg" }
+petgraph = {version = "0.6.5"}
 hex = "0.4.3"
 revm = { version = "9.0.0"}
 fnv = "1.0.7"

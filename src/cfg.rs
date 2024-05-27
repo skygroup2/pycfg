@@ -4,6 +4,7 @@ use revm::primitives::{Bytecode, Bytes};
 use revm::interpreter::analysis::to_analysed;
 use evm_cfg::cfg_gen::{cfg_graph, dasm, stack_solve};
 use crate::block::{InstructionBlock};
+use petgraph::Direction;
 use pyo3::prelude::*;
 
 #[pyclass]
@@ -13,6 +14,26 @@ pub enum Edges {
     ConditionTrue,  // Conditional jumpi, true branch
     ConditionFalse, // Conditional jumpi, false branch
     SymbolicJump,   // Jump to a symbolic value
+}
+
+#[pyclass]
+pub struct NodeEdge {
+    #[pyo3(get)]
+    pub from_node: (u16, u16),
+    #[pyo3(get)]
+    pub to_node: (u16, u16),
+    #[pyo3(get)]
+    pub edge: Edges
+}
+
+impl NodeEdge {
+    pub fn new(from_node: (u16, u16), to_node: (u16, u16), edge: &cfg_graph::Edges) -> Self {
+        Self{
+            from_node,
+            to_node,
+            edge: Edges::from(edge)
+        }
+    }
 }
 
 
@@ -82,7 +103,7 @@ impl CFGEvm {
         );
         let mut jumpi_edge: Option<Edges> = None;
         if cfg_runner.jumpi_edge.is_some() {
-            jumpi_edge = Some(Edges::from(cfg_runner.jumpi_edge.unwrap()));
+            jumpi_edge = Some(Edges::from(&cfg_runner.jumpi_edge.unwrap()));
         }
         let mut map_to_instructionblock = BTreeMap::new();
         for (key, value) in cfg_runner.map_to_instructionblock.iter() {
@@ -95,11 +116,29 @@ impl CFGEvm {
             map_to_instructionblock
         }
     }
+
+    pub fn incoming_edges(&self, node: (u16, u16)) -> Vec<NodeEdge> {
+        let in_edges = self.cfg_dag.edges_directed(node, Direction::Incoming);
+        let mut ret : Vec<NodeEdge> = vec![];
+        for e in in_edges.into_iter() {
+            ret.push(NodeEdge::new(e.0, e.1, e.2));
+        }
+        return ret
+    }
+
+    pub fn outgoing_edges(&self, node: (u16, u16)) -> Vec<NodeEdge> {
+        let in_edges = self.cfg_dag.edges_directed(node, Direction::Outgoing);
+        let mut ret : Vec<NodeEdge> = vec![];
+        for e in in_edges.into_iter() {
+            ret.push(NodeEdge::new(e.0, e.1, e.2));
+        }
+        return ret
+    }
 }
 
 
-impl From<cfg_graph::Edges> for Edges {
-    fn from(value: cfg_graph::Edges) -> Self {
+impl From<&cfg_graph::Edges> for Edges {
+    fn from(value: &cfg_graph::Edges) -> Self {
         match value {
             cfg_graph::Edges::Jump => {
                 Self::Jump
