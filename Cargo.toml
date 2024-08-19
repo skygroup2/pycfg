@@ -8,10 +8,12 @@ edition = "2021"
 name = "pycfg"
 crate-type = ["cdylib"]
 
+[patch."https://github.com/skygroup2/evm-cfg.git"]
+evm-cfg = { path = "../evm-cfg" }
+
 [dependencies]
 pyo3 = { version = "0.22.2", features = ["extension-module"] }
-#evm-cfg = {git = "https://github.com/skygroup2/evm-cfg.git", branch = "main"}
-evm-cfg = { path = "../evm-cfg" }
+evm-cfg = {git = "https://github.com/skygroup2/evm-cfg.git", branch = "main"}
 petgraph = {version = "0.6.5"}
 hex = "0.4.3"
 revm = { version = "13.0.0" }
