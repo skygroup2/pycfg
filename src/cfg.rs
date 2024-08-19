@@ -7,8 +7,8 @@ use crate::block::{InstructionBlock};
 use petgraph::Direction;
 use pyo3::prelude::*;
 
-#[pyclass]
-#[derive(Clone)]
+#[pyclass(eq, eq_int)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum Edges {
     Jump,           // Next instruction in sequence
     ConditionTrue,  // Conditional jumpi, true branch
